@@ -3,6 +3,7 @@ import Header from './components/Header';
 import Search from './components/Search';
 import ImageCard from './components/imagesCard';
 import { useState } from 'react';
+import { Container, Row, Col } from 'react-bootstrap';
 
 const UNSPLASH_KEY = process.env.REACT_APP_UNSPLASH_KEY;
 
@@ -12,7 +13,6 @@ const App = () => {
 
   const handleSearchSubmit = (e) => {
     e.preventDefault();
-    console.log(word);
     fetch(
       `https://api.unsplash.com/photos/random/?query=${word}&client_id=${UNSPLASH_KEY}`
     )
@@ -26,13 +26,27 @@ const App = () => {
     setWord('');
   };
 
+  const handleDeleteImage = (id) => {
+    setImages(images.filter((image) => image.id !== id));
+  };
   return (
     <div>
       <Header title="Images Gallery" />
       <Search word={word} setWord={setWord} handleSubmit={handleSearchSubmit} />
-      {images.map((image, i) => (
-        <ImageCard image={image} />
-      ))}
+      <Container className="mt-4" />
+      <Container>
+        <Row xs={1} md={2} lg={3}>
+          {images.map((image, i) => (
+            <Col key={i} className="pb-3">
+              <ImageCard
+                key={i}
+                image={image}
+                deleteImage={handleDeleteImage}
+              />
+            </Col>
+          ))}
+        </Row>
+      </Container>
     </div>
   );
 };
